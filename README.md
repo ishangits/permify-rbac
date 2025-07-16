@@ -88,7 +88,27 @@ When modules and permissions are created, the **Permify schema is updated automa
 - Secure chatbot/AI agents with permission gating
 - Enterprise dashboards where role and action mapping is highly dynamic
 
----
+## 🧭 Permission Flow Diagram
+
+User Action → Chatbot Prompt
+     |
+     v
+Check User Role (via Permify)
+     |
+     v
+ ┌───────────────────────────────┐
+ | Does user have permission?   |
+ └───────────────────────────────┘
+     |                             \
+     | Yes                          \ No
+     v                               v
+Call Agent2 API                Respond: No Access
+     |
+     v
+Get/Modify Resource (via Feed Info)
+     |
+     v
+Show Response to User
 
 ## 📎 References
 
