@@ -32,8 +32,7 @@ Create system modules like:
 Each module auto-generates its permissions:
 create, read, update, delete
 
-yaml
-Copy code
+
 
 ---
 
@@ -74,8 +73,7 @@ Before any API or Agent action, the RBAC system checks:
 
 User → Roles → Permissions → Allowed?
 
-yaml
-Copy code
+
 
 If permission is denied → the action is blocked instantly.
 
@@ -102,8 +100,7 @@ Real-Time Authorization Engine
 ↓
 Allow/Deny API or Agent Action
 
-yaml
-Copy code
+
 
 ---
 
@@ -131,8 +128,7 @@ permify-rbac/
 ├── go.mod
 └── README.md
 
-yaml
-Copy code
+
 
 ---
 
@@ -144,19 +140,16 @@ git clone https://github.com/ishangits/permify-rbac
 cd permify-rbac
 2️⃣ Install dependencies
 bash
-Copy code
 go mod tidy
 3️⃣ Add environment variables
 Create .env:
 
 ini
-Copy code
 PERMIFY_HOST=http://localhost:3476
 CHROMA_PATH=./chromadb
 PORT=8080
 4️⃣ Run the server
 bash
-Copy code
 go run main.go
 Server runs at:
 👉 http://localhost:8080
@@ -164,21 +157,18 @@ Server runs at:
 📌 API Examples
 ➤ Create Module
 http
-Copy code
 POST /modules
 {
   "moduleName": "User Management"
 }
 ➤ Create Role
 http
-Copy code
 POST /roles
 {
   "roleName": "Editor"
 }
 ➤ Assign Permissions to Role
 http
-Copy code
 POST /roles/assign
 {
   "roleName": "Editor",
@@ -186,7 +176,6 @@ POST /roles/assign
 }
 ➤ Assign Role to User
 http
-Copy code
 POST /users/assign-role
 {
   "userId": "user_123",
@@ -194,7 +183,6 @@ POST /users/assign-role
 }
 ➤ Permission Check Before API Call
 http
-Copy code
 POST /check
 {
   "userId": "user_123",
@@ -204,7 +192,6 @@ POST /check
 Response:
 
 json
-Copy code
 { "allowed": true }
 🧠 Ideal Use Cases
 ✔ SaaS Multi-Tenant Apps
