@@ -1,122 +1,222 @@
-# 🔐 permify-rbac – Modular Role-Based Access Control System
-
-A real-world RBAC (Role-Based Access Control) implementation using **Permify**, designed to dynamically manage permissions at the module level and enforce access checks during chatbot interactions.
-
----
-
-## 📌 Project Overview
-
-This system allows fine-grained access control across dynamically created modules. It uses **Permify** for relationship-based authorization, and **ChromaDB** for storing permission metadata (feeds).
+<h1 align="center">🔐 Permify RBAC — Modular Role-Based Access Control System</h1>
+<p align="center">A production-grade RBAC system with dynamic modules, permissions, roles, and real-time authorization using <b>Permify</b> & <b>ChromaDB</b>.</p>
 
 ---
 
-## 🧱 Tech Stack
+## 🚀 Overview
 
-| Layer       | Technology     |
-|-------------|----------------|
-| Backend     | Golang         |
-| Auth Engine | Permify        |
-| Storage     | ChromaDB       |
-| Frontend    | (Internal tool/CLI/API layer) |
-| AI Agents   | agent1, agent2 (API layer) |
+**Permify RBAC** is a fully dynamic and modular Role-Based Access Control system designed for real-world SaaS, enterprise dashboards, and AI/agent authorization.
 
----
+It solves the modern access-control challenges:
 
-## 🧠 Features & Flow
+- Permissions change frequently  
+- Schema updates should NOT require code changes  
+- Organizations need module-based permission structures  
+- Chatbots/AI agents must obey user permissions  
+- Systems need real-time authorization checks  
 
-### ✅ 1. **Module Creation**
-- New modules are created dynamically.
-- For each module, permissions (endpoints) like `read`, `write`, `delete` are defined.
-
-### ✅ 2. **Feeds Info Storage**
-Each permission has:
-- **Module selection**
-- **Endpoint/permissions**
-- **Prompt**
-- **Filters**
-- **Parameters**
-
-All of this is stored in **ChromaDB** for fast vector-based querying (used by `agent1`).
-
-### ✅ 3. **Schema Update in Permify**
-When modules and permissions are created, the **Permify schema is updated automatically** to reflect the new relationships (e.g., roles → module → permission).
-
-### ✅ 4. **Role Management**
-- Roles are created and assigned to sets of permissions.
-- Schema is again updated in Permify to bind roles with modules and actions.
-
-### ✅ 5. **User Role Assignment**
-- Users are assigned roles dynamically.
-- The relationship is updated in Permify (`user -> role`).
-
-### ✅ 6. **Chatbot Integration (agent2)**
-- When a prompt is sent through the chatbot, the system:
-  - First checks permission via **Permify's permission check API**.
-  - If allowed, **agent2 API** is called to fetch or execute information.
-  - If not allowed, it responds with a "No permission" message.
+This project centralizes RBAC logic with **Permify’s policy engine** + **ChromaDB vector store**, making permission checks fast, scalable, and secure.
 
 ---
 
-## 🧩 Example Use Case
+## ⭐ Key Features
 
-1. Admin creates a new module: `customer-support`
-2. Permissions: `read_ticket`, `close_ticket`, `assign_ticket`
-3. Feeds are added and stored for agent1 to reference
-4. A `SupportManager` role is created and assigned relevant permissions
-5. A user (`user123`) is assigned the `SupportManager` role
-6. When the chatbot receives a prompt from `user123`, it checks:
-   - Does `user123` have permission to `close_ticket`?
-   - If yes → agent2 executes it
-   - If no → denies access
+### ✅ 1. **Dynamic Module Creation**
+Create system modules like:
+- User Management  
+- Dashboard  
+- Projects  
+- Reports  
+- Billing  
 
----
+Each module auto-generates its permissions:
+create, read, update, delete
 
-## 🚀 Highlights of What I Did
-
-- ✅ Designed and implemented dynamic **module-based RBAC**
-- ✅ Synced permission feeds with **Permify schema updates**
-- ✅ Built flows to store agent-specific metadata in **ChromaDB**
-- ✅ Integrated **chatbot permission checks** before calling downstream APIs
-- ✅ Handled **role-to-permission** and **user-to-role** mappings with fine granularity
+yaml
+Copy code
 
 ---
 
-## 🛠️ How This Can Be Used
+### ✅ 2. **Automatic Permify Schema Sync**
+Whenever modules/permissions/roles update, your **Permify schema updates automatically**.
 
-- SaaS multi-tenant access control
-- Internal developer platforms
-- Secure chatbot/AI agents with permission gating
-- Enterprise dashboards where role and action mapping is highly dynamic
-
-## 🧭 Permission Flow Diagram
-
-User Action → Chatbot Prompt
-     |
-     v
-Check User Role (via Permify)
-     |
-     v
- ┌───────────────────────────────┐
- | Does user have permission?   |
- └───────────────────────────────┘
-     |                             \
-     | Yes                          \ No
-     v                               v
-Call Agent2 API                Respond: No Access
-     |
-     v
-Get/Modify Resource (via Feed Info)
-     |
-     v
-Show Response to User
-
-## 📎 References
-
-- [Permify Docs](https://docs.permify.co)
-- [ChromaDB](https://www.trychroma.com/)
-- [RBAC vs ABAC – Explained](https://permify.co/blog/rbac-vs-abac)
+No more manually editing policy files.
 
 ---
 
-> 📌 _This project highlights my ability to implement complex authorization flows across dynamic systems using Golang, Permify, and intelligent access design._
+### ✅ 3. **Role Management**
+- Create roles (Admin, Editor, Viewer, Ops, Agent, etc.)
+- Assign module-level permissions to each role
+- Fully dynamic, no hardcoding
 
+---
+
+### ✅ 4. **User Role + Permission Mapping**
+Each user can have multiple roles.
+
+User → Role → Permissions → Modules → Allowed Actions
+
+---
+
+### ✅ 5. **ChromaDB Integration**
+Stores:
+- Module metadata  
+- Permission descriptions  
+- Feeds for AI/Agents  
+- Fast permission lookup vectors  
+
+Built for **AI copilots / AI agents** that need permission-awareness.
+
+---
+
+### ✅ 6. **Real-Time Permission Check API**
+Before any API or Agent action, the RBAC system checks:
+
+User → Roles → Permissions → Allowed?
+
+yaml
+Copy code
+
+If permission is denied → the action is blocked instantly.
+
+---
+
+### ✅ 7. **Multi-Tenant Ready**
+For SaaS products supporting multiple organizations.
+
+Each org can have:
+- Its own modules  
+- Its own roles  
+- Its own permissions  
+- Its own schema & users  
+
+---
+
+## 🧱 Architecture
+
+Modules → Permissions → Roles → Users
+↓
+Permify Schema Sync
+↓
+Real-Time Authorization Engine
+↓
+Allow/Deny API or Agent Action
+
+yaml
+Copy code
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|------|------------|
+| Authorization Engine | **Permify** |
+| Vector DB | **ChromaDB** |
+| Backend | **Go (Golang)** |
+| Data Model | Dynamic JSON-based RBAC schema |
+| Use Cases | SaaS, Enterprise Admin, AI Agent Gating |
+
+---
+
+## 📂 Project Structure
+
+permify-rbac/
+├── modules/ # Module & permission creation
+├── roles/ # Role management
+├── permissions/ # Permission mapping
+├── feeds/ # ChromaDB stored metadata
+├── utils/ # Helper functions
+├── main.go
+├── go.mod
+└── README.md
+
+yaml
+Copy code
+
+---
+
+## ⚙️ Install & Run
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/ishangits/permify-rbac
+cd permify-rbac
+2️⃣ Install dependencies
+bash
+Copy code
+go mod tidy
+3️⃣ Add environment variables
+Create .env:
+
+ini
+Copy code
+PERMIFY_HOST=http://localhost:3476
+CHROMA_PATH=./chromadb
+PORT=8080
+4️⃣ Run the server
+bash
+Copy code
+go run main.go
+Server runs at:
+👉 http://localhost:8080
+
+📌 API Examples
+➤ Create Module
+http
+Copy code
+POST /modules
+{
+  "moduleName": "User Management"
+}
+➤ Create Role
+http
+Copy code
+POST /roles
+{
+  "roleName": "Editor"
+}
+➤ Assign Permissions to Role
+http
+Copy code
+POST /roles/assign
+{
+  "roleName": "Editor",
+  "permissions": ["dashboard:read", "user-management:update"]
+}
+➤ Assign Role to User
+http
+Copy code
+POST /users/assign-role
+{
+  "userId": "user_123",
+  "roleName": "Editor"
+}
+➤ Permission Check Before API Call
+http
+Copy code
+POST /check
+{
+  "userId": "user_123",
+  "module": "dashboard",
+  "permission": "read"
+}
+Response:
+
+json
+Copy code
+{ "allowed": true }
+🧠 Ideal Use Cases
+✔ SaaS Multi-Tenant Apps
+✔ Enterprise Admin Dashboards
+✔ Internal Platforms
+✔ AI Agents (permission-aware bots)
+✔ Access-Control Layers for Microservices
+
+🤝 Contributing
+Pull requests are welcome. Open an issue for suggestions or improvements.
+
+⭐ Show Support
+If this project helped you, consider starring ⭐ the repo.
+
+<p align="center"><b>Made with ❤️ by Ishan</b></p> ```
